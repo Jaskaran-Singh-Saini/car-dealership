@@ -7,8 +7,9 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
+  const isAuthEndpoint = config.url?.includes('/auth/');
   const token = localStorage.getItem('access_token');
-  if (token) {
+  if (token && !isAuthEndpoint) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

@@ -122,3 +122,8 @@ class TestVehiclePurchaseRestock:
         url = reverse('vehicle-restock', args=[sample_vehicle.id])
         response = auth_client.post(url, {'amount': 10})
         assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_restock_rejects_non_positive_amount(self, admin_client, sample_vehicle):
+        url = reverse('vehicle-restock', args=[sample_vehicle.id])
+        response = admin_client.post(url, {'amount': -1})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST

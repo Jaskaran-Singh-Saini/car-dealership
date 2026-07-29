@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.db.models import Q
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
@@ -81,6 +78,8 @@ class VehicleRestockView(APIView):
             return Response({'detail': 'Vehicle not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         amount = int(request.data.get('amount', 1))
+        if amount <= 0:
+            return Response({'detail': 'Restock amount must be positive.'}, status=status.HTTP_400_BAD_REQUEST)
         vehicle.quantity += amount
         vehicle.save()
         return Response(VehicleSerializer(vehicle).data, status=status.HTTP_200_OK)
