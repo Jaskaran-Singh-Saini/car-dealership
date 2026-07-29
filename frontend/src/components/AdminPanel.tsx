@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import toast from 'react-hot-toast';
 import * as api from '../api/vehicles';
 import type { Vehicle, VehicleInput } from '../api/types';
 
@@ -38,13 +39,16 @@ export default function AdminPanel({ vehicles, onChange }: Props) {
     try {
       if (editingId) {
         await api.updateVehicle(editingId, form);
+        toast.success('Vehicle updated.');
       } else {
         await api.addVehicle(form);
+        toast.success('Vehicle added.');
       }
       cancelEdit();
       onChange();
     } catch {
       setError('Could not save vehicle. Check the fields and try again.');
+      toast.error('Could not save vehicle.');
     }
   }
 
@@ -53,8 +57,10 @@ export default function AdminPanel({ vehicles, onChange }: Props) {
     try {
       await api.deleteVehicle(id);
       onChange();
+      toast.success('Vehicle deleted.');
     } catch {
       setError('Could not delete vehicle.');
+      toast.error('Could not delete vehicle.');
     }
   }
 
@@ -65,8 +71,10 @@ export default function AdminPanel({ vehicles, onChange }: Props) {
       await api.restockVehicle(id, amount);
       setRestockAmounts((prev) => ({ ...prev, [id]: '' }));
       onChange();
+      toast.success(`Restocked +${amount}.`);
     } catch {
       setError('Could not restock vehicle.');
+      toast.error('Could not restock vehicle.');
     }
   }
 

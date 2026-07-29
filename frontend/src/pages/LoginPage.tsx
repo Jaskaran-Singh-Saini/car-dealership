@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
@@ -17,9 +18,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login({ username, password });
+      toast.success('Welcome back!');
       navigate('/');
     } catch {
       setError('Invalid username or password.');
+      toast.error('Invalid username or password.');
     } finally {
       setLoading(false);
     }

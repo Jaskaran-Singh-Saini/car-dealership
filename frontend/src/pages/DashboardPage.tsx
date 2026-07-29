@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import * as api from '../api/vehicles';
 import type { Vehicle, SearchParams } from '../api/types';
 import VehicleCard from '../components/VehicleCard';
@@ -48,8 +49,9 @@ export default function DashboardPage() {
     try {
       const updated = await api.purchaseVehicle(id);
       setVehicles((prev) => prev.map((v) => (v.id === id ? updated : v)));
+      toast.success(`Purchased ${updated.make} ${updated.model}`);
     } catch {
-      setError('Purchase failed.');
+      toast.error('Purchase failed.');
     } finally {
       setPurchasingId(null);
     }
@@ -66,7 +68,9 @@ export default function DashboardPage() {
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
       {loading ? (
-        <p className="text-slate-500">Loading vehicles...</p>
+        <div className="flex justify-center py-16">
+          <div className="w-8 h-8 border-4 border-slate-200 border-t-emerald-600 rounded-full animate-spin" />
+        </div>
       ) : vehicles.length === 0 ? (
         <p className="text-slate-500">No vehicles found.</p>
       ) : (
