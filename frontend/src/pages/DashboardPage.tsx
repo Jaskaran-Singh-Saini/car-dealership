@@ -3,8 +3,11 @@ import * as api from '../api/vehicles';
 import type { Vehicle, SearchParams } from '../api/types';
 import VehicleCard from '../components/VehicleCard';
 import SearchBar from '../components/SearchBar';
+import AdminPanel from '../components/AdminPanel';
+import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
+  const { isAdmin } = useAuth();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,6 +58,9 @@ export default function DashboardPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Available Vehicles</h1>
+
+      {isAdmin && <AdminPanel vehicles={vehicles} onChange={loadVehicles} />}
+
       <SearchBar onSearch={handleSearch} onReset={loadVehicles} />
 
       {error && <p className="text-red-600 mb-4">{error}</p>}
