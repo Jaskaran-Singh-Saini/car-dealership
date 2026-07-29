@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -11,11 +12,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function Dashboard() {
   const { user, logout } = useAuth();
   return (
-    <div className="p-8">
-      <h1 className="text-xl font-bold">Welcome, {user?.username}</h1>
-      <button onClick={logout} className="mt-4 text-red-600 underline">
-        Logout
-      </button>
+    <div>
+      <nav className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+        <span className="font-semibold text-slate-800">🚗 Dealership</span>
+        <div className="flex items-center gap-4 text-sm text-slate-600">
+          <span>{user?.username} ({user?.role})</span>
+          <button onClick={logout} className="text-red-600 underline">Logout</button>
+        </div>
+      </nav>
+      <DashboardPage />
     </div>
   );
 }
